@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys, struct, json, os, socket, threading
 
-LOG_FILE = "/tmp/ff_bridge_debug.log"
+LOG_FILE = "/tmp/firefox_cli_tabs.log"
 sys.stderr = open(LOG_FILE, "a")
 
 SOCKET_PATH = "/tmp/firefox_cli_tabs.sock"
