@@ -1,0 +1,9 @@
+{
+  "name": "cli_tabs_bridge",
+  "description": "CLI Tabs",
+  "path": "SCRIPT_DIR/native.py",
+  "type": "stdio",
+  "allowed_extensions": [
+    "ALLOWED_EXTENSION"
+  ]
+}

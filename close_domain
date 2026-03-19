@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+echo "{\"type\":\"close_domain\",\"domain\":\"$1\"}"  | nc -U /tmp/firefox_cli_tabs.sock

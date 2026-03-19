@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+echo '{"type":"query_tabs"}' | nc -U /tmp/firefox_cli_tabs.sock
