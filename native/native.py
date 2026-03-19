@@ -15,6 +15,7 @@ def log(message):
 
 def send_to_firefox(message):
     content = json.dumps(message).encode("utf-8")
+    log(f"out to firefox: {content}")
     sys.stdout.buffer.write(struct.pack("I", len(content)))
     sys.stdout.buffer.write(content)
     sys.stdout.buffer.flush()
@@ -30,6 +31,7 @@ def handle_cli_commands():
     while True:
         conn, _ = server.accept()
         data = conn.recv(1024).decode("utf-8").strip()
+        log(f"in from stdin: {data}")
         msg = json.loads(data)
         msg_type = msg.get("type")
         if msg_type == "close_domain":
@@ -45,6 +47,7 @@ def handle_cli_commands():
 threading.Thread(target=handle_cli_commands, daemon=True).start()
 
 send_to_firefox({"type": "native_ready"})
+log("starting up")
 while True:
     try:
         raw_length = sys.stdin.buffer.read(4)
@@ -52,10 +55,14 @@ while True:
             break
         length = struct.unpack("I", raw_length)[0]
         message = json.loads(sys.stdin.buffer.read(length).decode("utf-8"))
+        log(f"in from firefox: {json.dumps(message)}")
 
         if socks_awaiting_responses:
+            log(f"forwarding message to awaiting socket")
             sock = socks_awaiting_responses.pop(0)
             sock.sendall(json.dumps(message, indent=2).encode("utf-8"))
             sock.close()
+        else:
+            log(f"no awaiting socket, dropping message")
     except EOFError:
         break
