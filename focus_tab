@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+echo "{\"type\":\"focus_tab\",\"id\":$1}" | nc -U /tmp/firefox_cli_tabs.sock

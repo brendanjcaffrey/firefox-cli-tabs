@@ -36,6 +36,10 @@ def handle_cli_commands():
         msg_type = msg.get("type")
         if msg_type == "close_domain":
             send_to_firefox({"type": "close_domain", "domain": msg.get("domain")})
+        elif msg_type == "close_tabs":
+            send_to_firefox({"type": "close_tabs", "ids": msg.get("ids")})
+        elif msg_type == "focus_tab":
+            send_to_firefox({"type": "focus_tab", "id": msg.get("id")})
         elif msg_type == "query_tabs":
             send_to_firefox({"type": "query_tabs"})
         else:

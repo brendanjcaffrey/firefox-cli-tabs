@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+ids=$(IFS=,; echo "$*")
+echo "{\"type\":\"close_tabs\",\"ids\":[$ids]}" | nc -U /tmp/firefox_cli_tabs.sock

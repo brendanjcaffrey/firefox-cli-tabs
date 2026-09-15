@@ -6,7 +6,7 @@ function postMessage(msg) {
 }
 
 function mapTab(t) {
-  return { title: t.title, url: t.url };
+  return { id: t.id, windowId: t.windowId, active: t.active, title: t.title, url: t.url };
 }
 
 function extractTabs(tabs) {
@@ -53,5 +53,20 @@ port.onMessage.addListener((msg) => {
       tabs.forEach((tab) => forceClose(tab.id));
       postMessage({ type: "closed_tabs", tabs: tabData });
     });
+  } else if (msg.type === "close_tabs") {
+    Promise.allSettled(msg.ids.map((id) => browser.tabs.get(id))).then((results) => {
+      const tabs = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+      const tabData = extractTabs(tabs);
+      tabs.forEach((tab) => forceClose(tab.id));
+      postMessage({ type: "closed_tabs", tabs: tabData });
+    });
+  } else if (msg.type === "focus_tab") {
+    browser.tabs
+      .update(msg.id, { active: true })
+      .then(async (tab) => {
+        await browser.windows.update(tab.windowId, { focused: true });
+        postMessage({ type: "focused_tab", tab: mapTab(tab) });
+      })
+      .catch((e) => postMessage({ type: "error", error: String(e) }));
   }
 });

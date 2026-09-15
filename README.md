@@ -4,6 +4,16 @@ Firefox extension to allow managing your tabs from the command line.
 
 Once installed, run `./query_tabs` to get a list of all open tabs or `./close_domain example.com` to close all tabs matching example.com.
 
+Each tab in `./query_tabs` output has an `id`. Use `./close_tabs 12 34` to close specific tabs, or `./focus_tab 12` to switch to a tab.
+
+### Raycast extension
+
+`raycast/` contains a Raycast extension to search, switch to, and close tabs. Run `rake raycast:dev` to load it into Raycast locally, or `rake raycast:publish` to publish it to the jcaffrey organization store (needs `npx ray login` first).
+
+### Logo
+
+The icons for both extensions are generated from `logo/logo.svg`. After editing it, run `rake logo:generate` (needs `rsvg-convert` from `brew install librsvg`).
+
 ### Install the native portion
 
 The extension requires an external script to handle communication with Firefox. If you run `native/copy.sh`, it will generate a `manifest.json` file for you from the template in `native/manifest.json` and place it where Firefox expects it to be.
@@ -30,17 +40,15 @@ This is a bit more involved, but you won't have to load the extension every time
 
 - if you don't have `web-ext` installed, install that first via: `npm install -g web-ext`
 - clone this repository
-- `cd extension`
-- in `manifest.json`, make sure to set the `browser_specific_settings.gecko.id` to something unique and possibly bump the `version`
+- in `extension/manifest.json`, make sure to set the `browser_specific_settings.gecko.id` to something unique and possibly bump the `version`
   - if you change the `browser_specific_settings.gecko.id`, you'll need to re-run the `native/copy.sh` script
-- run `web-ext lint` to make sure the extension doesn't have any issues
-- run `zip -r my-extension.zip .`
+- run `rake firefox:archive` to lint the extension with `web-ext` and zip it into `build/cli-tabs-<version>.zip`
 - go the [Developer Hub](https://addons.mozilla.org/en-US/developers/)
 - sign in or create an account
 
 #### Submitting a new add on
 
-- go to [Submit a New Add-on](https://addons.mozilla.org/en-US/developers/addon/submit/agreement), distribute on your own, and upload the `my-extension.zip` file from earlier
+- go to [Submit a New Add-on](https://addons.mozilla.org/en-US/developers/addon/submit/agreement), distribute on your own, and upload the zip file from `build/`
 - wait a bit for it to be approved (you'll get an email notification when it is)
 - go to [My Add-ons](https://addons.mozilla.org/en-US/developers/addons), select `CLI Tabs`, then `View All` in the left column
 - click on the latest version and download the `xpi` file, then agree to add the extension
@@ -48,6 +56,6 @@ This is a bit more involved, but you won't have to load the extension every time
 #### Uploading a new version
 
 - go to [My Add-ons](https://addons.mozilla.org/en-US/developers/addons), select `CLI Tabs`, then `Upload New Version` in the left column
-- upload the `my-extension.zip` file from earlier
+- upload the zip file from `build/`
 - wait a bit for it to be approved (you'll get an email notification when it is)
 - click on the latest version and download the `xpi` file, then agree to add the extension
